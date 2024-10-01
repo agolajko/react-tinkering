@@ -1,27 +1,30 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import SignUpModal from './SignUpModal';
 
 const Navbar = () => {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
     return (
-        <nav style={{
-            backgroundColor: '#333',
-            padding: '10px',
-            display: 'flex',
-            justifyContent: 'space-around',
-            alignItems: 'center'
-        }}>
-            <div style={{ color: 'white', fontWeight: 'bold' }}>My React App</div>
-            <ul style={{
-                listStyle: 'none',
-                display: 'flex',
-                margin: 0,
-                padding: 0
-            }}>
-                <li style={{ margin: '0 10px' }}><Link to="/" style={{ color: 'white', textDecoration: 'none' }}>Home</Link></li>
-                <li style={{ margin: '0 10px' }}><Link to="/about" style={{ color: 'white', textDecoration: 'none' }}>About</Link></li>
-                <li style={{ margin: '0 10px' }}><Link to="/contact" style={{ color: 'white', textDecoration: 'none' }}>Contact</Link></li>
-            </ul>
-        </nav>
+        <>
+            <nav className="bg-gray-800 p-4">
+                <div className="container mx-auto flex justify-between items-center">
+                    <div className="text-white font-bold text-xl">My React App</div>
+                    <ul className="flex space-x-4">
+                        <li><Link to="/" className="text-white hover:text-gray-300 transition duration-200">Home</Link></li>
+                        <li><Link to="/about" className="text-white hover:text-gray-300 transition duration-200">About</Link></li>
+                        <li><Link to="/contact" className="text-white hover:text-gray-300 transition duration-200">Contact</Link></li>
+                    </ul>
+                    <button
+                        onClick={() => setIsModalOpen(true)}
+                        className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition duration-200"
+                    >
+                        Sign Up
+                    </button>
+                </div>
+            </nav>
+            <SignUpModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+        </>
     );
 };
 
