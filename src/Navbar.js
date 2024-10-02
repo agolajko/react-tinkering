@@ -1,9 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import SignUpModal from './SignUpModal';
 
 const Navbar = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
+
+    useEffect(() => {
+        // Expose the setIsModalOpen function to the window object
+        window.openSignUpModal = () => setIsModalOpen(true);
+
+        // Cleanup function to remove the exposed function when component unmounts
+        return () => {
+            delete window.openSignUpModal;
+        };
+    }, []);
 
     return (
         <>
