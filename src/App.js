@@ -1,23 +1,62 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import React, { lazy, Suspense } from 'react';
+import { BrowserRouter as Router, Route, Routes, Navigate, Outlet } from 'react-router-dom';
+import { AuthProvider, useAuth } from './AuthContext';
 import Navbar from './Navbar';
-import Home from './Home';
-import About from './About';
-import Contact from './Contact';
+
+const Login = lazy(() => import('./Login'));
+const Dashboard = lazy(() => import('./Dashboard'));
+const About = lazy(() => import('./About'));
+const Contact = lazy(() => import('./Contact'));
+
+function ProtectedLayout() {
+  const { token } = useAuth();
+
+  if (!token) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return <Outlet />;
+}
 
 function App() {
+  const { loading } = useAuth();
+
+  if (loading) {
+    return <div>Loading...</div>; // Or a branded loading spinner
+  }
+
   return (
     <Router>
-      <div className="App">
+      <Suspense fallback={<div>Loading...</div>}>
         <Navbar />
+
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          {/* <Route path="/" element={<Home />} /> */}
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
+
+          {/* Protected routes */}
+          <Route element={<ProtectedLayout />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+
+          </Route>
+
+          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+          {/* Add a catch-all route for 404 pages */}
+          <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>
-      </div>
+      </Suspense>
     </Router>
   );
 }
 
-export default App;
+function AppWithAuth() {
+  return (
+    <AuthProvider>
+      <App />
+    </AuthProvider>
+  );
+}
+
+export default AppWithAuth;
