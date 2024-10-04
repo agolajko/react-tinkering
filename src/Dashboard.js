@@ -27,4 +27,14 @@ export default function Dashboard() {
 
     console.log(data);
     // Render dashboard with data
+    return (
+        <div style={{ padding: '20px' }}>
+            <h1>Dashboard: Protected route</h1>
+            <pre>{JSON.stringify(data, null, 2)}</pre>
+
+
+
+            {/* <p>{data}</p> */}
+        </div>
+    );
 }
